@@ -1,0 +1,33 @@
+name:                vis-server
+version:             0.0.1
+synopsis:            A server for upopple/webgl-visualizer
+homepage:            https://github.com/upopple/Visualizer-Server
+license:             MIT
+author:              Ulysses Popple
+maintainer:          ulysses.popple@gmail.com
+category:            Server
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable serve
+  main-is:             Main.hs
+  -- other-modules:       
+  build-depends:       base ==4.7.*
+                     , wai
+                     , warp
+                     , http-types
+                     , resourcet
+                     , scotty
+                     , text
+                     , bytestring
+                     , blaze-html
+                     , persistent ==2.1.*
+                     , persistent-template ==2.1.*
+                     , persistent-sqlite ==2.1.*
+                     , persistent-postgresql ==2.1.*
+                     , monad-logger ==0.3.*
+                     , heroku
+                     , transformers
+                     , wai-middleware-static
+                     , wai-extra
+                     , time
