@@ -1,0 +1,20 @@
+Default: &defaults
+  database: vis-server.sqlite3
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: vis-server_test.sqlite3
+  <<: *defaults
+
+Staging:
+  database: vis-server_staging.sqlite3
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: vis-server_production.sqlite3
+  poolsize: 100
+  <<: *defaults
