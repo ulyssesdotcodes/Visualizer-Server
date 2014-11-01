@@ -6,4 +6,5 @@
 
 / HomeR GET POST
 
-/routines RoutinesR GET
+/routines RoutinesR GET POST
+/routines/#RoutineId RoutineR GET PUT

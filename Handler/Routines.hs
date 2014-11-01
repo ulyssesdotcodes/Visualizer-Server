@@ -1,9 +1,10 @@
-{-# LANGUAGE TupleSections, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE TypeFamilies      #-}
 module Handler.Routines where
 
 import Import
-import Yesod.Form.Bootstrap3
-    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
@@ -12,9 +13,25 @@ import Yesod.Form.Bootstrap3
 -- The majority of the code you will write in Yesod lives in these handler
 -- functions. You can spread them across multiple files if you are so
 -- inclined, or create a single monolithic file.
-getRoutinesR :: Handler Html
+getRoutinesR :: Handler Value
 getRoutinesR = do
-    (formWidget, formEnctype) <- generateFormPost sampleForm
-    let submission = Nothing :: Maybe (FileInfo, Text)
-        handlerName = "getRoutinesR" :: Text
-    return "test"
+    allRoutines <- runDB (selectList [] [])
+    returnJson . asRoutineEntities $ allRoutines
+  where
+    asRoutineEntities :: [Entity Routine] -> [Entity Routine]
+    asRoutineEntities = id
+
+postRoutinesR :: Handler ()
+postRoutinesR = do
+    routine <- requireJsonBody :: Handler Routine
+    rid <- runDB $ insert routine
+    sendResponseCreated $ RoutineR rid
+
+getRoutineR :: RoutineId -> Handler Value
+getRoutineR rid = do
+    routine <- runDB (get404 rid)
+    let newRoutine = (Entity routine) { routineData = "" }
+    returnJson . Entity newRoutine
+
+putRoutineR :: RoutineId -> Handler Value
+putRoutineR = getRoutineR
