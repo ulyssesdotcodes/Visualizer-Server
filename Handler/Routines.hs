@@ -16,17 +16,19 @@ import Import
 getRoutinesR :: Handler Value
 getRoutinesR = do
     allRoutines <- runDB (selectList [] [])
-    returnJson $ map newRoutine (asRoutineEntities allRoutines)
+    returnJson . map removeEntityRoutineData . asRoutineEntities $ allRoutines
   where
-    newRoutine :: Entity Routine -> Entity Routine
-    newRoutine (Entity key routine) =Entity key (routine { routineData = "" })
+    removeEntityRoutineData :: Entity Routine -> Entity Routine
+    removeEntityRoutineData (Entity key routine) =
+        let removeRoutineData = routine { routineData = "" }
+        in Entity key $ removeRoutineData
     asRoutineEntities :: [Entity Routine] -> [Entity Routine]
     asRoutineEntities = id
 
-postRoutinesR :: Handler ()
+postRoutinesR :: Handler Value
 postRoutinesR = do
     routine <- requireJsonBody :: Handler Routine
-    rid <- runDB $ insert routine
+    rid <- runDB . insert $ routine
     sendResponseCreated $ RoutineR rid
 
 getRoutineR :: RoutineId -> Handler Value
