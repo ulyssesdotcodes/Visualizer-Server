@@ -16,8 +16,10 @@ import Import
 getRoutinesR :: Handler Value
 getRoutinesR = do
     allRoutines <- runDB (selectList [] [])
-    returnJson . asRoutineEntities $ allRoutines
+    returnJson $ map newRoutine (asRoutineEntities allRoutines)
   where
+    newRoutine :: Entity Routine -> Entity Routine
+    newRoutine (Entity key routine) =Entity key (routine { routineData = "" })
     asRoutineEntities :: [Entity Routine] -> [Entity Routine]
     asRoutineEntities = id
 
@@ -30,8 +32,7 @@ postRoutinesR = do
 getRoutineR :: RoutineId -> Handler Value
 getRoutineR rid = do
     routine <- runDB (get404 rid)
-    let newRoutine = (Entity routine) { routineData = "" }
-    returnJson . Entity newRoutine
+    returnJson routine
 
 putRoutineR :: RoutineId -> Handler Value
 putRoutineR = getRoutineR
