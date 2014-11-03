@@ -14,6 +14,7 @@ import Network.Wai.Middleware.RequestLogger
     ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
+import Network.Wai.Middleware.Cors
 import qualified Database.Persist
 import Database.Persist.Sql (runMigration)
 import Database.Persist.Sqlite (createSqlitePool, sqlDatabase, sqlPoolSize)
@@ -54,7 +55,7 @@ makeApplication conf = do
     -- Create the WAI application and apply middlewares
     app <- toWaiAppPlain foundation
     let logFunc = messageLoggerSource foundation (appLogger foundation)
-    return (logWare $ defaultMiddlewaresNoLogging app, logFunc)
+    return (logWare . simpleCors $ defaultMiddlewaresNoLogging app, logFunc)
 
 -- | Loads up any necessary settings, creates your foundation datatype, and
 -- performs some initialization.
