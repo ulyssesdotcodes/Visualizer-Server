@@ -124,25 +124,25 @@ instance YesodPersistRunner App where
 instance YesodAuth App where
     type AuthId App = UserId
 
-    -- Where to send a user after successful login
-    loginDest _ = HomeR
-    -- Where to send a user after logout
-    logoutDest _ = HomeR
+    -- -- Where to send a user after successful login
+    -- loginDest _ = HomeR
+    -- -- Where to send a user after logout
+    -- logoutDest _ = HomeR
 
-    getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert User
-                    { userIdent = credsIdent creds
-                    , userPassword = Nothing
-                    }
+    -- getAuthId creds = runDB $ do
+    --     x <- getBy $ UniqueUser $ credsIdent creds
+    --     case x of
+    --         Just (Entity uid _) -> return $ Just uid
+    --         Nothing -> do
+    --             fmap Just $ insert User
+    --                 { userIdent = credsIdent creds
+    --                 , userPassword = Nothing
+    --                 }
 
-    -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def]
+    -- -- You can add other plugins like BrowserID, email or OAuth here
+    -- authPlugins _ = [authBrowserId def]
 
-    authHttpManager = httpManager
+    -- authHttpManager = httpManager
 
 instance YesodAuthPersist App
 

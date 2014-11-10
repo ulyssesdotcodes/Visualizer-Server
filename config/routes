@@ -4,7 +4,5 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET POST
-
 /routines RoutinesR GET POST
 /routines/#RoutineId RoutineR GET PUT
